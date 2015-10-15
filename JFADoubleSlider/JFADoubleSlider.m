@@ -440,6 +440,13 @@ static const int PRECISION = 1;
 
 - (void)drawKnobAtX:(CGFloat)x value:(float)value halfBoundsHeight:(float)halfBoundsHeight showGreaterThanMaxVal:(BOOL)showGreaterThanMax
 {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    //// Shadow Declarations
+    UIColor* shadow = [UIColor darkGrayColor];
+    CGSize shadowOffset = CGSizeMake(1, 2);
+    CGFloat shadowBlurRadius = 2;
+    
     UIBezierPath *knob = [UIBezierPath bezierPathWithArcCenter:CGPointMake(x, halfBoundsHeight)
                                                         radius:(KNOB_WIDTH/2 - 1)
                                                     startAngle:0
@@ -448,8 +455,15 @@ static const int PRECISION = 1;
     knob.lineWidth = KNOB_BORDER_WIDTH;
     [self.knobStrokeColor setStroke];
     [self.knobFillColor setFill];
+    
+    CGContextSaveGState(context);
+    CGContextSetShadowWithColor(context, shadowOffset, shadowBlurRadius, shadow.CGColor);
+    [[UIColor whiteColor] setFill];
+    
     [knob stroke];
     [knob fill];
+    CGContextRestoreGState(context);
+    
     if (self.showValues)
     {
         NSString *valueString = @"";
@@ -482,5 +496,6 @@ static const int PRECISION = 1;
         [valueString drawAtPoint:CGPointMake(valueX, valueY)
                   withAttributes:@{ NSForegroundColorAttributeName:self.valueColor }];
     }
+    
 }
 @end
