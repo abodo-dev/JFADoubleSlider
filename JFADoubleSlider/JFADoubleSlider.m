@@ -266,6 +266,12 @@ static const int PRECISION = 1;
     [self setNeedsDisplay];
 }
 
+- (void)setShowGreaterThanMaxVal:(BOOL)showGreaterThanMaxVal
+{
+    _showGreaterThanMaxVal = showGreaterThanMaxVal;
+    [self setNeedsDisplay];
+}
+
 - (void)setValuesAbove:(BOOL)valuesAbove
 {
     _valuesAbove = valuesAbove;
@@ -306,6 +312,7 @@ static const int PRECISION = 1;
     self.reportInteger = NO;
     self.showValues = YES;
     self.valuesAbove = NO;
+    self.showGreaterThanMaxVal = NO;
     self.continuous = YES;
     self.precision = PRECISION;
     self.currentKnob = NEITHER;
@@ -427,11 +434,11 @@ static const int PRECISION = 1;
     [rightOutPath addLineToPoint:CGPointMake(self.bounds.size.width - KNOB_WIDTH / 2, halfBoundsHeight)];
     [rightOutPath closePath];
     [rightOutPath stroke];
-    [self drawKnobAtX:firstX value:self.curMinVal halfBoundsHeight:halfBoundsHeight];
-    [self drawKnobAtX:secondX value:self.curMaxVal halfBoundsHeight:halfBoundsHeight];
+    [self drawKnobAtX:firstX value:self.curMinVal halfBoundsHeight:halfBoundsHeight showGreaterThanMaxVal:NO];
+    [self drawKnobAtX:secondX value:self.curMaxVal halfBoundsHeight:halfBoundsHeight showGreaterThanMaxVal:self.showGreaterThanMaxVal];
 }
 
-- (void)drawKnobAtX:(CGFloat)x value:(float)value halfBoundsHeight:(float)halfBoundsHeight
+- (void)drawKnobAtX:(CGFloat)x value:(float)value halfBoundsHeight:(float)halfBoundsHeight showGreaterThanMaxVal:(BOOL)showGreaterThanMax
 {
     UIBezierPath *knob = [UIBezierPath bezierPathWithArcCenter:CGPointMake(x, halfBoundsHeight)
                                                         radius:(KNOB_WIDTH/2 - 1)
@@ -455,6 +462,11 @@ static const int PRECISION = 1;
             NSString *formatString = [NSString stringWithFormat:@"%%.0%df", self.precision];
             valueString = [NSString stringWithFormat:formatString, value];
         }
+        if (self.showGreaterThanMaxVal && (value == self.absMaxVal))
+        {
+            valueString = [valueString stringByAppendingString:@"+"];
+        }
+        
         CGSize valueSize = [valueString sizeWithAttributes:nil];
         CGFloat valueX = x - valueSize.width / 2;
         if (valueX < 0.0)
