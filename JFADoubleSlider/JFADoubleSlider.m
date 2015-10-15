@@ -443,9 +443,9 @@ static const int PRECISION = 1;
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //// Shadow Declarations
-    UIColor* shadow = [UIColor grayColor];
-    CGSize shadowOffset = CGSizeMake(1, 1);
-    CGFloat shadowBlurRadius = 1;
+    UIColor* shadow = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.2];
+    CGSize shadowOffset = CGSizeMake(0.0, 1.5);
+    CGFloat shadowBlurRadius = 2.5;
     
     UIBezierPath *knob = [UIBezierPath bezierPathWithArcCenter:CGPointMake(x, halfBoundsHeight)
                                                         radius:(KNOB_WIDTH/2 - 1)
